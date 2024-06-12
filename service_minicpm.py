@@ -150,7 +150,7 @@ def setup_as_service():
                 model_path = f.read()
     if model_path:
         # m_path = args.model_dir
-        init_model(args.model_dir, args.lora)
+        init_model(model_path, args.lora)
 
     app.run(host="0.0.0.0", port=args.port)
 
