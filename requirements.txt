@@ -2,5 +2,6 @@ flask
 pillow
 torch
 peft
+vllm
 transformers
 jsonlines
