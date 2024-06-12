@@ -42,7 +42,6 @@ def download_weights_from_hf(model_name_or_path,
             allow_patterns = [pattern]
             break
 
-    logger.info(f"Using model weights format {allow_patterns}")
     # Use file lock to prevent multiple processes from
     # downloading the same model weights at the same time.
     with get_lock(model_name_or_path, cache_dir):
