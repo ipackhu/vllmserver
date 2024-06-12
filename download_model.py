@@ -44,12 +44,12 @@ def download_weights_from_hf(model_name_or_path,
 
     # Use file lock to prevent multiple processes from
     # downloading the same model weights at the same time.
-    with get_lock(model_name_or_path, cache_dir):
-        hf_folder = snapshot_download(model_name_or_path,
-                                      allow_patterns=allow_patterns,
-                                      cache_dir=cache_dir,
-                                      tqdm_class=DisabledTqdm,
-                                      revision=revision)
+ 
+    hf_folder = snapshot_download(model_name_or_path,
+                                  allow_patterns=allow_patterns,
+                                  cache_dir=cache_dir,
+                                  tqdm_class=DisabledTqdm,
+                                  revision=revision)
     return hf_folder
 
 
