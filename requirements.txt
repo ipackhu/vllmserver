@@ -1,6 +1,6 @@
-peft
-transformers
 flask
 pillow
-sanic-cors
+torch
+peft
+transformers
 jsonlines
