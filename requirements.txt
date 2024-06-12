@@ -1,4 +1,5 @@
 flask==3.0.2
 pillow
 tqdm
+huggingface_hub
 jsonlines
