@@ -1,8 +1,58 @@
 import os
 import shutil
+import fnmatch
 # from tensorize import serialize_model # TODO: Add back when tensorizer is implemented
 from huggingface_hub import snapshot_download
-from vllm.model_executor.model_loader.weight_utils import download_weights_from_hf, DisabledTqdm
+from huggingface_hub import HfFileSystem, snapshot_download
+from tqdm.auto import tqdm
+
+
+class DisabledTqdm(tqdm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, disable=True)
+        
+
+def download_weights_from_hf(model_name_or_path,
+                             cache_dir,
+                             allow_patterns,
+                             revision):
+    """Download model weights from Hugging Face Hub.
+    
+    Args:
+        model_name_or_path (str): The model name or path.
+        cache_dir (Optional[str]): The cache directory to store the model
+            weights. If None, will use HF defaults.
+        allow_patterns (List[str]): The allowed patterns for the
+            weight files. Files matched by any of the patterns will be
+            downloaded.
+        revision (Optional[str]): The revision of the model.
+
+    Returns:
+        str: The path to the downloaded model weights.
+    """
+    # Before we download we look at that is available:
+    fs = HfFileSystem()
+    file_list = fs.ls(model_name_or_path, detail=False, revision=revision)
+
+    # depending on what is available we download different things
+    for pattern in allow_patterns:
+        matching = fnmatch.filter(file_list, pattern)
+        if len(matching) > 0:
+            allow_patterns = [pattern]
+            break
+
+    logger.info(f"Using model weights format {allow_patterns}")
+    # Use file lock to prevent multiple processes from
+    # downloading the same model weights at the same time.
+    with get_lock(model_name_or_path, cache_dir):
+        hf_folder = snapshot_download(model_name_or_path,
+                                      allow_patterns=allow_patterns,
+                                      cache_dir=cache_dir,
+                                      tqdm_class=DisabledTqdm,
+                                      revision=revision)
+    return hf_folder
+
 
 
 def download_lora_weight(model_name):
