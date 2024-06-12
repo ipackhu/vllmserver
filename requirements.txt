@@ -1,7 +1,6 @@
-flask
+flask==3.0.2
 pillow
-torch
-peft
-vllm
-transformers
+torch==2.2.1
+peft==0.6.1
+transformers==4.40.2
 jsonlines
