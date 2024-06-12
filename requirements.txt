@@ -1,0 +1,6 @@
+peft
+transformers
+flask
+pillow
+sanic-cors
+jsonlines
